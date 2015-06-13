@@ -15,73 +15,59 @@
 		list-style: none;
 	}
 	.tabs{
-		width: 475px;
+		width: 500px;
 		margin: 50px auto 0;
 		border: 1px solid #ccc;
 	}
-	.tabs .btn-list{
+	.tabs .header{
 		border-bottom: 1px solid #ccc;
-		font-size: 0; line-height: 0;
 		overflow: hidden;
 	}
-	.tabs .btn-list .btn{
+	.tabs .header .button{
 		float: left;
-		width: 150px;
-		text-align: center; line-height: 40px; font-size: 16px;
-		margin-left: 10px;
+		width: 33.333333333%;
+		text-align: center; line-height: 40px;
 		border-left: 1px solid #ccc;
-		border-right: 1px solid #ccc;
-		cursor: pointer;
+		box-sizing: border-box;
 	}
-	.tabs .btn-list .btn:first-child{
-		border-left: none;
-		margin-left: 0;
+	.tabs .header .button:first-child{
+		border: none;
 	}
-	.tabs .content .panel{
-		height: 50px;
-        display: none;
+	.tabs .body .item{
+		display: none;
 	}
-    .tabs .content .active{
-        display: block;
-    }
-	.active{
+	.tabs .enter,.tabs .active{
+		display: block!important;
 		color: red;
 	}
 </style>
 </head>
-<body>
-    
-    <div class="tabs" ng-init="selected.index=0">
-    	<ul class="btn-list">
-    		<li tabs-btn class="btn" active-class="active">
-    			1
-    		</li>
-            <li tabs-btn class="btn" active-class="active">
-                2
-            </li>
-            <li tabs-btn class="btn" active-class="active">
-                3
-            </li>
-    	</ul>
-    	<ol class="content">
-    		<li tabs-content class="panel" active-class="active">
-    			1
-    		</li>
-            <li tabs-content class="panel" active-class="active">
-                2
-            </li>
-            <li tabs-content class="panel" active-class="active">
-                3
-            </li>
-    	</ol>
-    </div>
+<body ng-app="app">
+	<div tabs template-url="/tabs.tpl">
+		<div tabs-pane class="item" title="1">asdasd</div>
+		<div tabs-pane class="item" title="2" ajax="data.html">{{ajaxData}}</div>
+		<div tabs-pane class="item" title="3" ajax="data.html"></div>
+	</div>
+
+	<script type="text/ng-template" id="/tabs.tpl">
+		<div class="tabs">
+			<div class="header">
+				<div class="button" ng-class="{active: pane.selected}" ng-repeat="pane in ::panes" ng-click="select(pane)">
+					{{pane.title}}
+				</div>
+			</div>
+			<div class="body" ng-transclude>
+			</div>
+		</div>
+	</script>
     <script src="angular.min.js"></script>
     <script src="angular-tabs.js"></script>
     <script>
-    	angular.module('app', ['tabs']);
+    	var app = angular.module('app', ['tabs']);
 
-
-        angular.bootstrap(document.body, ['app']);
+    	app.run(function($rootScope){
+    		$rootScope.test = "data.html";
+    	});
 
     </script>
 </body>

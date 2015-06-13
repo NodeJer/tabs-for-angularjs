@@ -1,0 +1,3 @@
+{
+	"test": "dataJson.js"
+}

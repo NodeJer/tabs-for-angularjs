@@ -1,77 +1,84 @@
-/**
-* tabs Module
-*
-* Description
-*/
 angular.module('tabs', []).
 
-directive('tabs', function(){
-	return {
-		scope: {}, // {} = isolate, true = child, false/undefined = no change
-		controller: function($scope, $element, $attrs, $transclude) {
+service('$tabs', ['', function(){
+	
+}]).
 
-			$scope.btns = [];
-			$scope.contents = [];
+directive('tabs', function() {
+    return {
+        scope: {},
+        controller: function($scope, $element) {
+            var panes = $scope.panes = [];
 
+            $scope.select = function(pane) {
+                angular.forEach(panes, function(pane) {
+                    pane.selected = false;
+                });
+                pane.selected = true;
+            }
 
-			this.addBtn = function(){
-				$scope.btns.push(arguments);
-			}
-			this.addContent = function(){
-				$scope.contents.push(arguments);
-			}
-			this.selectBtn = function(currentBtn){
-				var index = 0;
+            this.getScope = function(){
+            	return $scope;
+            }
+            this.addPane = function(pane) {
+                if (panes.length == 0) $scope.select(pane);
+                panes.push(pane);
+            }
+        },
+        templateUrl: function($element, $attrs){
 
-				angular.forEach($scope.btns, function(btn, i){
-					if(btn[1] == currentBtn[1]){
-						index = i;
-					}
-					btn[1].removeClass(btn[2].activeClass);
-				});
-				currentBtn[1].addClass(currentBtn[2].activeClass);
-
-				this.selectContent($scope.contents[index]);
-			}
-			this.selectContent = function(currentContent){
-				angular.forEach($scope.contents, function(content){
-					content[1].removeClass(content[2].activeClass);
-				});
-				currentContent[1].addClass(currentContent[2].activeClass);
-			}
-		},
-		restrict: 'AC', // E = Element, A = Attribute, C = Class, M = Comment
-		link: function($scope, $element, $attrs, controller){
-			controller.selectBtn($scope.btns[0]);
-		}
-	};
+        	var templateUrl = $attrs.templateUrl;
+        	
+        	if(templateUrl && templateUrl != 'templateUrl'){
+        		return templateUrl;
+        	}
+        	else{
+        		alert('tabs directive templateUrl is null');
+        	}
+        },
+        restrict: 'AE',
+        transclude: true,
+        replace: true
+    };
 }).
 
-directive('tabsBtn', function(){
-	return {
-		scope:{},
-		require: '^tabs', // Array = multiple requires, ? = optional, ^ = check parent elements
-		restrict: 'AC', // E = Element, A = Attribute, C = Class, M = Comment
-		link: function($scope, $element, $attrs, tabsCtrl) {
-			var args = arguments;
+directive('tabsPane', ['$http', function($http) {
+    return {
+        require: '^tabs',
+        restrict: 'AE',
+        transclude: true,
+        scope: {
+            title: '@',
+            ajax: '@'
+        },
+        link: function($scope, $element, $attrs, tabsController) {
+            tabsController.addPane($scope);
 
-			tabsCtrl.addBtn.apply(this, arguments);
+            if(!$scope.ajax)return;
 
-			$element.on('click', function(){
-				tabsCtrl.selectBtn(args);
-			});
-		}
-	};
-}).
+            $scope.$watch('selected', function(newValue, oldValue, scope) {
+            	if(newValue === true){
+            		$http.post($scope.ajax).success(function(data){
+            			if(angular.isObject(data)){
+            				
+            			}
+            			else{
+            				$scope.ajaxData = data;
+            			}
+            		});
+            	}
+            });
+        },
+        template: function($element, $attrs){
+        	var ajax = $attrs.ajax;
 
-directive('tabsContent', function(){
-	return {
-		scope:{},
-		require: '^tabs', // Array = multiple requires, ? = optional, ^ = check parent elements
-		restrict: 'AC', // E = Element, A = Attribute, C = Class, M = Comment
-		
-		link: function($scope, $element, $attrs, tabsCtrl) {
-			tabsCtrl.addContent.apply(this, arguments);
-		}
-	};
-})
+        	if(ajax && ajax != 'ajax'){
+        		return '<div ng-class="{enter: selected}">{{ajaxData}}</div>';
+        	}
+        	else{
+        		return '<div ng-class="{enter: selected}" ng-transclude></div>';
+        	}
+        },
+        replace: true
+    };
+}]);
