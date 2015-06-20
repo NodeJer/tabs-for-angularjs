@@ -1,4 +1,4 @@
-angular.module('tabs', []).
+angular.module('ng.tabs', []).
 
 service('$tabs', ['', function(){
 	
