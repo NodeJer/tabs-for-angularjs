@@ -14,12 +14,6 @@ directive('tabs', ['$compile', function($compile) {
                 });
                pane.selected = true;
             }
-            this.selectBtn = function(btn){
-                angular.forEach(btns,function(pane) {
-                    pane.selected = false;
-                });
-                pane.selected = true;
-            }
             this.getScope = function(){
             	return $scope;
             }
@@ -77,7 +71,6 @@ directive('tabsBtnTemplate', ['$parse', function($parse){
     return {
         require: '^?tabs',
         scope: {},
-        // controller: function($scope, $element, $attrs, $transclude) {},
         restrict: 'AE',
         link: function($scope, $element, iAttrs, tabsController) {
             if(!tabsController)return;
