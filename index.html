@@ -1,74 +1,75 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>Examples</title>
-<meta name="description" content="">
-<meta name="keywords" content="">
-<link href="" rel="stylesheet">
-<style>
-	*{
-		padding: 0; margin: 0;
-	}
-	li{
-		list-style: none;
-	}
-	.tabs{
-		width: 500px;
-		margin: 50px auto 0;
-		border: 1px solid #ccc;
-	}
-	.tabs .header{
-		border-bottom: 1px solid #ccc;
-		overflow: hidden;
-	}
-	.tabs .header .button{
-		float: left;
-		width: 33.333333333%;
-		text-align: center; line-height: 40px;
-		border-left: 1px solid #ccc;
-		box-sizing: border-box;
-	}
-	.tabs .header .button:first-child{
-		border: none;
-	}
-	.tabs .body .item{
-		display: none;
-	}
-	.tabs .enter,.tabs .active{
-		display: block!important;
-		color: red;
-	}
-</style>
-</head>
-<body ng-app="app">
-	<div tabs template-url="/tabs.tpl">
-		<div tabs-pane class="item" title="1">asdasd</div>
-		<div tabs-pane class="item" title="2" ajax="data.html">{{ajaxData}}</div>
-		<div tabs-pane class="item" title="3" ajax="data.html"></div>
-	</div>
 
-	<script type="text/ng-template" id="/tabs.tpl">
-		<div class="tabs">
-			<div class="header">
-				<div class="button" ng-class="{active: pane.selected}" ng-repeat="pane in ::panes" ng-click="select(pane)">
-					{{pane.title}}
-				</div>
-			</div>
-			<div class="body" ng-transclude>
-			</div>
-		</div>
-	</script>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Examples</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    
+    li {
+        list-style: none;
+    }
+    
+    .tabs {
+        width: 500px;
+        margin: 50px auto 0;
+        border: 1px solid #ccc;
+    }
+    
+    .tabs .header {
+        border-bottom: 1px solid #ccc;
+        overflow: hidden;
+    }
+    
+    .tabs .header .button {
+        float: left;
+        width: 33.333333333%;
+        text-align: center;
+        line-height: 40px;
+        border-left: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    
+    .tabs .header .button:first-child {
+        border: none;
+    }
+    
+    .tabs .body .item {
+        display: none;
+    }
+    
+    .tabs .enter,
+    .tabs .active {
+        display: block!important;
+        color: red;
+    }
+    </style>
+</head>
+
+<body ng-app="app">
+    <div class="tabs" tabs>
+        <div class="header">
+            <div class="button" tabs-btn-template active-class="active" ref="title"></div>
+        </div>
+        <div class="body">
+            <div tabs-pane class="item" title="1" active-class="active" ajax="data.html">a</div>
+            <div tabs-pane class="item" title="2" active-class="active">2</div>
+            <div tabs-pane class="item" title="3" active-class="active" ajax="data.html">3</div>
+        </div>
+    </div>
     <script src="angular.min.js"></script>
     <script src="angular-tabs.js"></script>
     <script>
-    	var app = angular.module('app', ['ng.tabs']);
-
-    	app.run(function($rootScope){
-    		$rootScope.test = "data.html";
-    	});
-
+    var app = angular.module('app', ['ng.tabs']);
     </script>
 </body>
+
 </html>
